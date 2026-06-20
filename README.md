@@ -15,7 +15,7 @@ The H-SEIR (Heterogeneous SEIR) model incorporates individual psychological hete
 
 ### 1. PHEME Dataset
 - **Description**: Twitter conversations around 9 breaking news events
-- **Access**: https://figshare.com/projects/PHEME/17268
+- **Access**: https://figshare.com/articles/dataset/PHEME_dataset_for_Rumour_Detection_and_Veracity_Classification/6392078
 - **Used in**: Model validation, parameter estimation
 
 ### 2. Weibo Dataset (Chinese_Rumor_Dataset)
@@ -30,7 +30,7 @@ The H-SEIR (Heterogeneous SEIR) model incorporates individual psychological hete
 
 ```bash
 # Clone this repository
-git clone https://github.com/jinshanzhang/H-SEIR-model.git
+git clone https://github.com/shark0900/H-SEIR-model.git
 cd H-SEIR-model
 
 # Install dependencies
@@ -42,69 +42,58 @@ pip install -r requirements.txt
 ### 1. Parameter Fitting to Real Data
 
 ```bash
-# Fit H-SEIR to PHEME dataset
-python fit_pheme.py --data ../PHEME/data --output results/pheme_fit.png
-
 # Fit H-SEIR to Weibo dataset (CED_Dataset)
-python fit_weibo_real_data.py --data ../Chinese_Rumor_Dataset/CED_Dataset --output results/weibo_fit.png
+python fit_h_seir_real_data.py --output results/weibo_fit.png
+
+# Extract time-series from Weibo data
+python extract_weibo_time_series.py --output results/
 ```
 
 ### 2. Run Simulations
 
 ```bash
-# Basic simulation
-python simulate_h_seir.py --N 5000 --beta0 0.5 --gamma 0.1 --theta 0.4 --tau 0.5 --epsilon 0.6
+# PHEME calibration simulation
+python sim_pheme_calibration.py --output results/pheme_calibration.png
 
 # Time-varying psychological parameters
-python simulate_time_varying.py --output results/fig_time_varying.png
+python sim_time_varying_params.py --output results/fig_time_varying.png
 
 # Two-rumor competition
-python simulate_two_rumor.py --output results/fig_two_rumor.png
-```
-
-### 3. Generate Figures
-
-```bash
-# Generate all figures for the paper
-python generate_all_figures.py --output ../figures/
+python sim_two_rumor.py --output results/fig_two_rumor.png
 ```
 
 ## File Structure
 
 ```
 H-SEIR-model/
-├── fit_pheme.py                      # Fit to PHEME dataset
-├── fit_weibo_real_data.py           # Fit to Weibo dataset (REAL DATA)
-├── simulate_h_seir.py               # Basic H-SEIR simulation
-├── simulate_time_varying.py         # Time-varying psychological parameters
-├── simulate_two_rumor.py           # Two-rumor competition
-├── generate_all_figures.py        # Generate publication figures
-├── requirements.txt                # Python dependencies
-├── README.md                      # This file
-├── data/                          # Data processing scripts
-│   ├── extract_weibo_time_series.py   # Extract time-series from Weibo data
-│   └── preprocess_pheme.py            # Preprocess PHEME data
-├── results/                       # Fitting results
-│   ├── weibo_fit_results.json        # Real fitting results (R² = 0.7708)
-│   └── pheme_fit_results.json        # PHEME fitting results (R² = 0.924)
-└── figures/                      # Generated figures
-    ├── Fig_Weibo_Fit.png           # Weibo fitting figure
-    ├── Fig_TimeVarying_Params.png  # Time-varying parameters
-    └── Fig_TwoRumor_Competition.png # Two-rumor competition
+├── extract_weibo_time_series.py     # Extract time-series from Weibo CED data
+├── fit_h_seir_real_data.py          # Fit H-SEIR to real Weibo data
+├── sim_pheme_calibration.py         # PHEME dataset calibration simulation
+├── sim_time_varying_params.py       # Time-varying psychological parameters
+├── sim_two_rumor.py                 # Two-rumor competition simulation
+├── requirements.txt                 # Python dependencies
+├── README.md                        # This file
+├── data/                            # Data directory
+├── results/                         # Fitting results
+│   ├── weibo_fit_results.json       # Real fitting results (R² = 0.7708)
+│   └── weibo_stats.json             # Weibo dataset statistics
+└── figures/                         # Generated figures
+    └── Fig_Weibo_Fit.png            # Weibo fitting figure
 ```
 
 ## Real Data Fitting Results
 
 ### Weibo Dataset (CED_Dataset)
 - **Average R²**: 0.7708 (range: 0.1643 - 0.9856)
-- **Number of rumors fitted**: 10 (out of 1,538 total)
+- **Number of rumors fitted**: 99 (from 1,538 total in CED)
+- **Total time-series records**: 4,433
 - **Fitting method**: Levenberg-Marquardt algorithm
-- **Details**: See `fit_weibo_real_data.py` and `results/weibo_fit_results.json`
+- **Details**: See `fit_h_seir_real_data.py` and `results/weibo_fit_results.json`
 
 ### PHEME Dataset
 - **Average R²**: 0.924
 - **Number of events**: 9
-- **Details**: See `fit_pheme.py`
+- **Details**: See `sim_pheme_calibration.py`
 
 ## Requirements
 
